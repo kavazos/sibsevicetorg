@@ -1,0 +1,23 @@
+
+> sibservistorg@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+  - Environments: .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+Failed to compile.
+
+./src/app/api/admin/submissions/[id]/route.ts:49:15
+Type error: Type 'string' is not assignable to type 'SubmissionStatus | EnumSubmissionStatusFieldUpdateOperationsInput | undefined'.
+
+[0m [90m 47 |[39m     [36mconst[39m updated [33m=[39m [36mawait[39m prisma[33m.[39mcontactSubmission[33m.[39mupdate({[0m
+[0m [90m 48 |[39m       where[33m:[39m { id }[33m,[39m[0m
+[0m[31m[1m>[22m[39m[90m 49 |[39m       data[33m:[39m { status }[33m,[39m[0m
+[0m [90m    |[39m               [31m[1m^[22m[39m[0m
+[0m [90m 50 |[39m     })[33m;[39m[0m
+[0m [90m 51 |[39m[0m
+[0m [90m 52 |[39m     console[33m.[39mlog([32m`[PATCH /api/admin/submissions/${id}] Updated:`[39m[33m,[39m updated[33m.[39mid)[33m;[39m[0m
+Next.js build worker exited with code: 1 and signal: null

@@ -1,0 +1,9 @@
+
+> sibservistorg@0.1.0 build
+> next build
+
+  тЦ▓ Next.js 14.2.35
+  - Environments: .env
+
+Завершить выполнение пакетного файла [Y(да)/N(нет)]? 
+^C

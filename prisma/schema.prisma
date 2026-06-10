@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SubmissionStatus {
+  NEW
+  IN_PROGRESS
+  PROCESSED
+}
+
+model ContactSubmission {
+  id                 String             @id @default(uuid())
+  name               String
+  phone              String?
+  email              String
+  message            String
+  createdAt          DateTime           @default(now())
+  confirmed          Boolean            @default(false)
+  confirmationToken  String?            @unique
+  confirmationSentAt DateTime?
+  confirmedAt        DateTime?
+  isDeliverable      Boolean?
+  status             SubmissionStatus   @default(NEW)
+  userId             String?
+  user               User?              @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+
+  submissions  ContactSubmission[]
+}

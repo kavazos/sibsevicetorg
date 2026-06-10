@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <!-- Gradient for hexagon shape -->
+    <linearGradient id="hexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a3a8f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2979ff;stop-opacity:1" />
+    </linearGradient>
+    <!-- Gradient for server units -->
+    <linearGradient id="serverGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1f3a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0d1128;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- === HEXAGON "C" SHAPE === -->
+  <!-- Drawn as an open C-shape hexagon using a thick stroked path -->
+  <!-- Hex center: 215, 195; radius ~115 -->
+  <!-- C shape: hexagon outline open on right side -->
+  <path d="
+    M 215 82
+    L 315 138
+    L 315 195
+  " fill="none" stroke="url(#hexGrad)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="
+    M 215 82
+    L 115 138
+    L 115 252
+    L 215 308
+    L 315 252
+    L 315 195
+  " fill="none" stroke="url(#hexGrad)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Bottom right partial -->
+  <path d="
+    M 215 308
+    L 280 270
+  " fill="none" stroke="url(#hexGrad)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- === SERVER RACK (3 units) === -->
+  <!-- Server unit 1 -->
+  <rect x="148" y="160" width="148" height="36" rx="4" fill="url(#serverGrad)"/>
+  <rect x="156" y="170" width="10" height="16" rx="2" fill="#2979ff"/>
+  <circle cx="280" cy="175" r="3" fill="#2979ff"/>
+  <circle cx="268" cy="175" r="3" fill="#2979ff"/>
+  <circle cx="256" cy="175" r="3" fill="#2979ff"/>
+  <!-- Server unit 2 -->
+  <rect x="148" y="202" width="148" height="36" rx="4" fill="url(#serverGrad)"/>
+  <rect x="156" y="212" width="10" height="16" rx="2" fill="#2979ff"/>
+  <circle cx="280" cy="217" r="3" fill="#2979ff"/>
+  <circle cx="268" cy="217" r="3" fill="#2979ff"/>
+  <circle cx="256" cy="217" r="3" fill="#2979ff"/>
+  <!-- Server unit 3 -->
+  <rect x="148" y="244" width="148" height="36" rx="4" fill="url(#serverGrad)"/>
+  <rect x="156" y="254" width="10" height="16" rx="2" fill="#2979ff"/>
+  <circle cx="280" cy="259" r="3" fill="#2979ff"/>
+  <circle cx="268" cy="259" r="3" fill="#2979ff"/>
+  <circle cx="256" cy="259" r="3" fill="#2979ff"/>
+
+  <!-- === PIXEL DISSOLVE EFFECT (right side) === -->
+  <!-- Large squares -->
+  <rect x="306" y="183" width="16" height="16" rx="2" fill="#2979ff" opacity="0.9"/>
+  <rect x="326" y="167" width="13" height="13" rx="2" fill="#2979ff" opacity="0.8"/>
+  <rect x="306" y="215" width="14" height="14" rx="2" fill="#1a3a8f" opacity="0.85"/>
+  <rect x="328" y="200" width="11" height="11" rx="2" fill="#2979ff" opacity="0.75"/>
+  <rect x="306" y="245" width="12" height="12" rx="2" fill="#1a3a8f" opacity="0.7"/>
+  <!-- Medium squares -->
+  <rect x="344" y="178" width="9" height="9" rx="1.5" fill="#2979ff" opacity="0.65"/>
+  <rect x="346" y="213" width="8" height="8" rx="1.5" fill="#2979ff" opacity="0.6"/>
+  <rect x="338" y="232" width="7" height="7" rx="1.5" fill="#1a3a8f" opacity="0.55"/>
+  <!-- Small squares -->
+  <rect x="358" y="190" width="6" height="6" rx="1" fill="#2979ff" opacity="0.5"/>
+  <rect x="362" y="208" width="5" height="5" rx="1" fill="#2979ff" opacity="0.4"/>
+  <rect x="352" y="224" width="5" height="5" rx="1" fill="#1a3a8f" opacity="0.35"/>
+  <rect x="370" y="198" width="4" height="4" rx="1" fill="#2979ff" opacity="0.3"/>
+  <rect x="320" y="260" width="9" height="9" rx="1.5" fill="#1a3a8f" opacity="0.5"/>
+  <rect x="335" y="252" width="7" height="7" rx="1.5" fill="#2979ff" opacity="0.4"/>
+
+  <!-- === MAIN TEXT: СИБСЕРВИСТОРГ === -->
+  <!-- "СИБСЕРВИС" in dark navy, "ТОРГ" in blue -->
+  <text x="250" y="375"
+    font-family="'Arial Black', 'Arial Bold', Arial, sans-serif"
+    font-weight="900"
+    font-size="52"
+    text-anchor="middle"
+    letter-spacing="2">
+    <tspan fill="#0d1640">СИБСЕРВИС</tspan><tspan fill="#2979ff">ТОРГ</tspan>
+  </text>
+
+  <!-- === SUBTITLE with decorative lines === -->
+  <!-- Left line -->
+  <line x1="60" y1="400" x2="115" y2="400" stroke="#2979ff" stroke-width="1.5"/>
+  <!-- Subtitle text -->
+  <text x="250" y="405"
+    font-family="Arial, sans-serif"
+    font-weight="400"
+    font-size="14"
+    text-anchor="middle"
+    letter-spacing="4"
+    fill="#1a3a8f">ХОСТИНГ И ОБРАБОТКА ДАННЫХ</text>
+  <!-- Right line -->
+  <line x1="385" y1="400" x2="440" y2="400" stroke="#2979ff" stroke-width="1.5"/>
+</svg>

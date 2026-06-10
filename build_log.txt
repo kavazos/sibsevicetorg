@@ -1,0 +1,87 @@
+
+> sibservistorg@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+  - Environments: .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/23) ...
+Me route error B [Error]: Dynamic server usage: Route /api/auth/me couldn't be rendered statically because it used `request.headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at V (C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:21778)
+    at Object.get (C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:29465)
+    at l (C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\.next\server\app\api\auth\me\route.js:1:621)
+    at C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\node_modules\next\dist\server\lib\trace\tracer.js:122:103 {
+  description: "Route /api/auth/me couldn't be rendered statically because it used `request.headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+   Generating static pages (5/23) 
+Confirm error: B [Error]: Dynamic server usage: Route /api/contact/confirm couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at V (C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:21778)
+    at Object.get (C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:29465)
+    at u (C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\.next\server\app\api\contact\confirm\route.js:1:576)
+    at C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\kubys\OneDrive\Desktop\dip\sibservistorg\node_modules\next\dist\server\lib\trace\tracer.js:122:103 {
+  description: "Route /api/contact/confirm couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+   Generating static pages (11/23) 
+   Generating static pages (17/23) 
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ ✓ Generating static pages (23/23)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    17.8 kB         114 kB
+├ ○ /_not-found                          873 B          88.1 kB
+├ ƒ /account                             1.37 kB        97.3 kB
+├ ƒ /account/profile                     1.36 kB        88.6 kB
+├ ƒ /account/submissions/[id]            181 B          96.1 kB
+├ ƒ /admin                               4.09 kB        91.4 kB
+├ ○ /admin/login                         1.41 kB        97.4 kB
+├ ƒ /api/account/submission/[id]/export  0 B                0 B
+├ ƒ /api/admin/login                     0 B                0 B
+├ ƒ /api/admin/logout                    0 B                0 B
+├ ƒ /api/admin/submissions/[id]          0 B                0 B
+├ ƒ /api/auth/change-password            0 B                0 B
+├ ƒ /api/auth/login                      0 B                0 B
+├ ƒ /api/auth/logout                     0 B                0 B
+├ ƒ /api/auth/me                         0 B                0 B
+├ ƒ /api/auth/register                   0 B                0 B
+├ ƒ /api/auth/update                     0 B                0 B
+├ ƒ /api/contact                         0 B                0 B
+├ ƒ /api/contact/confirm                 0 B                0 B
+├ ○ /auth/login                          1.04 kB        88.3 kB
+├ ○ /auth/register                       1.09 kB        88.4 kB
+├ ○ /offer                               181 B          96.1 kB
+├ ○ /privacy                             181 B          96.1 kB
+└ ○ /sitemap.xml                         0 B                0 B
++ First Load JS shared by all            87.3 kB
+  ├ chunks/117-0ed36c50e9a18f65.js       31.7 kB
+  ├ chunks/fd9d1056-e70a490eb02719dc.js  53.6 kB
+  └ other shared chunks (total)          1.89 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

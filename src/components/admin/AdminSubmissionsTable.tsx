@@ -22,12 +22,6 @@ const statusLabels: Record<SubmissionStatus, string> = {
   PROCESSED: "Обработано",
 };
 
-const statusClasses: Record<SubmissionStatus, string> = {
-  NEW: "bg-yellow-100 text-yellow-800",
-  IN_PROGRESS: "bg-blue-100 text-blue-800",
-  PROCESSED: "bg-green-100 text-green-800",
-};
-
 const formatCsvValue = (value: string) => `"${value.replace(/"/g, '""')}"`;
 
 export default function AdminSubmissionsTable({ submissions }: AdminSubmissionsTableProps) {
@@ -149,7 +143,7 @@ export default function AdminSubmissionsTable({ submissions }: AdminSubmissionsT
 
       setItems((current) => current.filter((item) => item.id !== id));
       setStatusMessage("Заявка успешно удалена.");
-    } catch (error) {
+    } catch {
       setStatusMessage("Ошибка сервера. Повторите позже.");
     } finally {
       setLoadingId(null);
@@ -174,7 +168,7 @@ export default function AdminSubmissionsTable({ submissions }: AdminSubmissionsT
         return;
       }
 
-      const data = await response.json();
+      await response.json();
 
       setItems((current) =>
         current.map((item) => (item.id === id ? { ...item, status } : item))

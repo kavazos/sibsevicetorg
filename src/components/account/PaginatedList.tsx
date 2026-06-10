@@ -1,14 +1,14 @@
+import type { Prisma } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
 
 type Props = {
-  userId: string;
   page: number;
   limit: number;
-  where: any;
+  where: Prisma.ContactSubmissionWhereInput;
 };
 
-export default async function PaginatedList({ userId, page, limit, where }: Props) {
+export default async function PaginatedList({ page, limit, where }: Props) {
   const skip = (page - 1) * limit;
   const submissions = await prisma.contactSubmission.findMany({ where, orderBy: { createdAt: 'desc' }, skip, take: limit });
   const total = await prisma.contactSubmission.count({ where });

@@ -1,3 +1,4 @@
+import type { Prisma, SubmissionStatus } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { verifySessionToken } from "@/lib/auth";
@@ -16,8 +17,9 @@ export default async function AccountPage({ searchParams }: { searchParams?: { p
   const limit = 10;
   const statusFilter = (searchParams?.status as string) || '';
 
-  const where: any = userId ? { userId } : {};
-  if (statusFilter) where.status = statusFilter;
+  const where: Prisma.ContactSubmissionWhereInput = {};
+  if (userId) where.userId = userId;
+  if (statusFilter) where.status = statusFilter as SubmissionStatus;
 
   const total = userId ? await prisma.contactSubmission.count({ where }) : 0;
   const allSubs = userId ? await prisma.contactSubmission.findMany({ where: { userId } }) : [];
@@ -25,24 +27,6 @@ export default async function AccountPage({ searchParams }: { searchParams?: { p
     acc[s.status] = (acc[s.status] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
-
-  const statusLabel = (s: string) => {
-    switch (s) {
-      case 'NEW': return 'Новая';
-      case 'IN_PROGRESS': return 'В работе';
-      case 'PROCESSED': return 'Обработана';
-      default: return s.toLowerCase();
-    }
-  }
-
-  const statusClass = (s: string) => {
-    switch (s) {
-      case 'NEW': return 'bg-yellow-100 text-yellow-800';
-      case 'IN_PROGRESS': return 'bg-blue-100 text-blue-800';
-      case 'PROCESSED': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  }
 
   if (!userId) {
     return (
@@ -95,7 +79,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { p
               </div>
 
               <div className="mt-8">
-                <PaginatedList userId={userId as string} page={page} limit={limit} where={where} statusLabel={statusLabel} statusClass={statusClass} />
+                <PaginatedList page={page} limit={limit} where={where} />
               </div>
             </div>
 

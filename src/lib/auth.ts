@@ -2,7 +2,6 @@ import { createHmac, randomBytes } from "crypto";
 import bcrypt from "bcryptjs";
 
 const SESSION_SECRET = process.env.SESSION_SECRET || "dev_secret";
-const COOKIE_NAME = "user-session";
 
 export async function hashPassword(password: string) {
   return bcrypt.hash(password, 10);
@@ -31,7 +30,7 @@ export function verifySessionToken(token: string | null | undefined) {
     if (expected !== sig) return null;
     const userId = parts[0];
     return userId;
-  } catch (e) {
+  } catch {
     return null;
   }
 }

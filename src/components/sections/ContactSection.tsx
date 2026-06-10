@@ -63,7 +63,7 @@ export default function ContactSection() {
       setForm({ name: "", company: "", phone: "", email: "", service: "", message: "" });
       setToast({ message: "Ваша заявка успешно отправлена!", type: "success" });
       setTimeout(() => setSent(false), 5000);
-    } catch (err) {
+    } catch {
       setError("Ошибка сети. Проверьте подключение и повторите попытку.");
       setToast({ message: "Не удалось отправить заявку. Попробуйте позже.", type: "error" });
     } finally {

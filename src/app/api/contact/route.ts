@@ -33,7 +33,7 @@ async function smtpVerify(email: string): Promise<boolean> {
       const sendCmd = (cmd: string) => {
         try {
           socket.write(cmd + "\r\n");
-        } catch (e) {
+        } catch {
           // ignore
         }
       };
@@ -41,7 +41,7 @@ async function smtpVerify(email: string): Promise<boolean> {
       const cleanup = (res: boolean) => {
         try {
           socket.end();
-        } catch (e) {}
+        } catch {}
         resolve(res);
       };
 
@@ -76,7 +76,7 @@ async function smtpVerify(email: string): Promise<boolean> {
       socket.on("timeout", () => cleanup(false));
       socket.on("end", () => cleanup(false));
     });
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -148,15 +148,16 @@ export async function POST(request: NextRequest) {
 
         const userMailHtml = `
           <p>Здравствуйте, ${name}.</p>
-          <p>Спасибо за вашу заявку. Пожалуйста, подтвердите ваш email, перейдя по ссылке ниже:</p>
+          <p>Ваша заявка успешно принята и зарегистрирована в нашей системе.</p>
+          <p>Наш менеджер свяжется с вами в течение рабочего дня.</p>
+          <p>Если нужно подтвердить адрес электронной почты, перейдите по ссылке ниже:</p>
           <p><a href="${confirmUrl}">Подтвердить email</a></p>
-          <p>Если вы не отправляли заявку — проигнорируйте это письмо.</p>
         `;
 
         await transporter.sendMail({
           from: process.env.SMTP_FROM,
           to: email,
-          subject: `Подтвердите ваш email — ${process.env.SITE_NAME || "Сибсервисторг"}`,
+          subject: `Ваша заявка принята — ${process.env.SITE_NAME || "Сибсервисторг"}`,
           html: userMailHtml,
         });
 

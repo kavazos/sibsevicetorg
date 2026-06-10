@@ -98,7 +98,7 @@ npm run dev
 
 Обязательные переменные:
 
-- `DATABASE_URL` — подключение к PostgreSQL
+- `DATABASE_URL` — подключение к PostgreSQL (можно использовать Supabase Postgres URL или Neon URL)
 - `SESSION_SECRET` — секрет для пользовательских сессий
 - `ADMIN_USER` — логин администратора
 - `ADMIN_PASSWORD` — пароль администратора
@@ -111,6 +111,32 @@ npm run dev
 - `CONTACT_EMAIL` — email, на который отправляются уведомления о заявках
 - `SITE_URL` — базовый URL сайта (например, `https://example.com`)
 - `SITE_NAME` — название сайта в письмах
+
+## Neon (альтернатива Supabase)
+
+Если вы хотите использовать Neon вместо Supabase, то настройка проекта остаётся стандартной для Prisma.
+
+1. Создайте проект в Neon и получите строку подключения PostgreSQL.
+2. Вставьте её в `DATABASE_URL` в `.env`:
+
+```env
+DATABASE_URL="postgresql://<user>:<password>@<project>.<region>.neon.tech/<database>?sslmode=require"
+```
+
+3. Примените миграции и сгенерируйте Prisma Client:
+
+```bash
+npx prisma migrate deploy
+npx prisma generate
+```
+
+4. Для разработки можно также использовать:
+
+```bash
+npx prisma migrate dev --name init
+```
+
+> Важно: у Neon подключение обычно работает без дополнительных `external_id` или SNI-параметров, в отличие от некоторых pooler-URL Supabase.
 
 ## Админ-панель
 

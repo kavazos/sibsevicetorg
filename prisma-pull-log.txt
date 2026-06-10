@@ -1,0 +1,47 @@
+prisma:engines binaries to download libquery-engine, schema-engine +436ms
+prisma:getSchema prismaConfig {
+  "packagePath": "C:\\Users\\kubys\\OneDrive\\Desktop\\sibservistorg\\package.json"
+} +567ms
+prisma:getSchema Checking existence of C:\Users\kubys\OneDrive\Desktop\sibservistorg\schema.prisma +1ms
+prisma:getSchema Reading schema from single file C:\Users\kubys\OneDrive\Desktop\sibservistorg\schema.prisma +0ms
+prisma:getSchema Checking existence of C:\Users\kubys\OneDrive\Desktop\sibservistorg\prisma\schema.prisma +0ms
+prisma:getSchema Reading schema from single file C:\Users\kubys\OneDrive\Desktop\sibservistorg\prisma\schema.prisma +1ms
+prisma:getSchema Reading schema from multiple files C:\Users\kubys\OneDrive\Desktop\sibservistorg\prisma\schema +1ms
+prisma:loadEnv project root found at C:\Users\kubys\OneDrive\Desktop\sibservistorg\package.json +1ms
+prisma:getSchema prismaConfig {
+  "packagePath": "C:\\Users\\kubys\\OneDrive\\Desktop\\sibservistorg\\package.json"
+} +1ms
+prisma:tryLoadEnv Environment variables loaded from C:\Users\kubys\OneDrive\Desktop\sibservistorg\.env +1ms
+prisma:getConfig Using getConfig Wasm +3ms
+prisma:getConfig config data retrieved without errors in getConfig Wasm +14ms
+prisma:getSchema Reading schema from single file C:\Users\kubys\OneDrive\Desktop\sibservistorg\prisma\schema.prisma +2ms
+prisma:db:pull schemaPathResult {
+  "schemaPath": "C:\\Users\\kubys\\OneDrive\\Desktop\\sibservistorg\\prisma\\schema.prisma",
+  "schemaRootDir": "C:\\Users\\kubys\\OneDrive\\Desktop\\sibservistorg\\prisma",
+  "schemas": [
+    [
+      "C:\\Users\\kubys\\OneDrive\\Desktop\\sibservistorg\\prisma\\schema.prisma",
+      "generator client {\r\n  provider = \"prisma-client-js\"\r\n}\r\n\r\ndatasource db {\r\n  provider = \"postgresql\"\r\n  url      = env(\"DATABASE_URL\")\r\n}\r\n\r\nenum SubmissionStatus {\r\n  NEW\r\n  IN_PROGRESS\r\n  PROCESSED\r\n}\r\n\r\nmodel ContactSubmission {\r\n  id                 String             @id @default(uuid())\r\n  name               String\r\n  phone              String?\r\n  email              String\r\n  message            String\r\n  createdAt          DateTime           @default(now())\r\n  confirmed          Boolean            @default(false)\r\n  confirmationToken  String?            @unique\r\n  confirmationSentAt DateTime?\r\n  confirmedAt        DateTime?\r\n  isDeliverable      Boolean?\r\n  status             SubmissionStatus   @default(NEW)\r\n  userId             String?\r\n  user               User?              @relation(fields: [userId], references: [id])\r\n}\r\n\r\nmodel User {\r\n  id           String   @id @default(uuid())\r\n  email        String   @unique\r\n  passwordHash String\r\n  name         String?\r\n  createdAt    DateTime @default(now())\r\n\r\n  submissions  ContactSubmission[]\r\n}\r\n"
+    ]
+  ]
+} +1ms
+prisma:loadEnv project root found at C:\Users\kubys\OneDrive\Desktop\sibservistorg\package.json +1ms
+prisma:getSchema prismaConfig {
+  "packagePath": "C:\\Users\\kubys\\OneDrive\\Desktop\\sibservistorg\\package.json"
+} +2ms
+prisma:tryLoadEnv Environment variables loaded from C:\Users\kubys\OneDrive\Desktop\sibservistorg\.env +0ms
+prisma:getSchema Reading schema from single file C:\Users\kubys\OneDrive\Desktop\sibservistorg\prisma\schema.prisma +2ms
+prisma:getConfig Using getConfig Wasm +1ms
+prisma:getConfig config data retrieved without errors in getConfig Wasm +2ms
+prisma:getConfig Using getConfig Wasm +0ms
+prisma:getConfig config data retrieved without errors in getConfig Wasm +2ms
+prisma:getSchema Reading schema from single file C:\Users\kubys\OneDrive\Desktop\sibservistorg\prisma\schema.prisma +0ms
+prisma:schemaEngine:rpc starting Schema engine with binary: C:\Users\kubys\OneDrive\Desktop\sibservistorg\node_modules\@prisma\engines\schema-engine-windows.exe +3ms
+prisma:getSchema Reading schema from single file C:\Users\kubys\OneDrive\Desktop\sibservistorg\prisma\schema.prisma +0ms
+prisma:getConfig Using getConfig Wasm +1ms
+prisma:getConfig config data retrieved without errors in getConfig Wasm +1ms
+prisma:schemaEngine:rpc SENDING RPC CALL {"id":1,"jsonrpc":"2.0","method":"introspect","params":{"schema":{"files":[{"path":"C:\\Users\\kubys\\OneDrive\\Desktop\\sibservistorg\\prisma\\schema.prisma","content":"generator client {\r\n  provider = \"prisma-client-js\"\r\n}\r\n\r\ndatasource db {\r\n  provider = \"postgresql\"\r\n  url      = env(\"DATABASE_URL\")\r\n}\r\n\r\nenum SubmissionStatus {\r\n  NEW\r\n  IN_PROGRESS\r\n  PROCESSED\r\n}\r\n\r\nmodel ContactSubmission {\r\n  id                 String             @id @default(uuid())\r\n  name               String\r\n  phone              String?\r\n  email              String\r\n  message            String\r\n  createdAt          DateTime           @default(now())\r\n  confirmed          Boolean            @default(false)\r\n  confirmationToken  String?            @unique\r\n  confirmationSentAt DateTime?\r\n  confirmedAt        DateTime?\r\n  isDeliverable      Boolean?\r\n  status             SubmissionStatus   @default(NEW)\r\n  userId             String?\r\n  user               User?              @relation(fields: [userId], references: [id])\r\n}\r\n\r\nmodel User {\r\n  id           String   @id @default(uuid())\r\n  email        String   @unique\r\n  passwordHash String\r\n  name         String?\r\n  createdAt    DateTime @default(now())\r\n\r\n  submissions  ContactSubmission[]\r\n}\r\n"}]},"force":false,"compositeTypeDepth":-1,"baseDirectoryPath":"C:\\Users\\kubys\\OneDrive\\Desktop\\sibservistorg\\prisma"}} +15ms
+prisma:schemaEngine:stderr {"timestamp":"2026-06-10T16:21:27.9221503Z","level":"INFO","fields":{"message":"Starting schema engine RPC server","git_hash":"605197351a3c8bdd595af2d2a9bc3025bca48ea2"},"target":"schema_engine"} +13ms
+prisma:schemaEngine:stderr {"timestamp":"2026-06-10T16:21:27.9242017Z","level":"INFO","fields":{"message":"SchemasContainer { files: [SchemaContainer { content: \"generator client {\\r\\n  provider = \\\"prisma-client-js\\\"\\r\\n}\\r\\n\\r\\ndatasource db {\\r\\n  provider = \\\"postgresql\\\"\\r\\n  url      = env(\\\"DATABASE_URL\\\")\\r\\n}\\r\\n\\r\\nenum SubmissionStatus {\\r\\n  NEW\\r\\n  IN_PROGRESS\\r\\n  PROCESSED\\r\\n}\\r\\n\\r\\nmodel ContactSubmission {\\r\\n  id                 String             @id @default(uuid())\\r\\n  name               String\\r\\n  phone              String?\\r\\n  email              String\\r\\n  message            String\\r\\n  createdAt          DateTime           @default(now())\\r\\n  confirmed          Boolean            @default(false)\\r\\n  confirmationToken  String?            @unique\\r\\n  confirmationSentAt DateTime?\\r\\n  confirmedAt        DateTime?\\r\\n  isDeliverable      Boolean?\\r\\n  status             SubmissionStatus   @default(NEW)\\r\\n  userId             String?\\r\\n  user               User?              @relation(fields: [userId], references: [id])\\r\\n}\\r\\n\\r\\nmodel User {\\r\\n  id           String   @id @default(uuid())\\r\\n  email        String   @unique\\r\\n  passwordHash String\\r\\n  name         String?\\r\\n  createdAt    DateTime @default(now())\\r\\n\\r\\n  submissions  ContactSubmission[]\\r\\n}\\r\\n\", path: \"C:\\\\Users\\\\kubys\\\\OneDrive\\\\Desktop\\\\sibservistorg\\\\prisma\\\\schema.prisma\" }] }"},"target":"schema_core::state"} +1ms
+Завершить выполнение пакетного файла [Y(да)/N(нет)]? 
+^C

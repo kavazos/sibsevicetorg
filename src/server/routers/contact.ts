@@ -107,7 +107,7 @@ export const contactRouter = router({
     } catch (err) { console.error("Contact submit error:", err); throw new Error("Внутренняя ошибка сервера"); }
   }),
 
-  confirm: publicProcedure.input(contactConfirmSchema).mutation(async ({ input, ctx }) => {
+  confirm: publicProcedure.input(contactConfirmSchema).mutation(async ({ input }) => {
     try {
       const { token } = input;
       const submission = await prisma.contactSubmission.findUnique({ where: { confirmationToken: token } });

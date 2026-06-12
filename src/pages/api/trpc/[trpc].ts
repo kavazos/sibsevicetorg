@@ -2,7 +2,6 @@ import { createNextApiHandler } from "@trpc/server/adapters/next";
 import { appRouter } from "@/server/routers";
 import { createContext } from "@/server/trpc";
 import type { NextApiRequest, NextApiResponse } from "next";
-import superjson from "superjson";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   // Preprocess request body: accept single-call batch-shaped bodies like {"0": {...}}
@@ -10,7 +9,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     if (process.env.NODE_ENV === "development") {
       try {
         console.log("[trpc handler] incoming body (before):", JSON.stringify(req.body));
-      } catch (e) {
+      } catch (_e) {
         console.log("[trpc handler] incoming body (before): (unserializable)");
       }
     }
@@ -25,14 +24,14 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         if (process.env.NODE_ENV === "development") {
           try {
             console.log("[trpc handler] unwrapped body:", JSON.stringify(req.body));
-          } catch (e) {
+          } catch (_e) {
             console.log("[trpc handler] unwrapped body: (unserializable)");
           }
         }
       }
     }
 
-  } catch (e) {
+  } catch (_e) {
     // ignore preprocessing errors and let tRPC handle malformed input
   }
 
@@ -54,19 +53,19 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             req.body = text ? JSON.parse(text) : undefined;
-          } catch (e) {
+          } catch (_e) {
             // leave as raw text
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             req.body = text;
           }
         }
-      } catch (e) {
+      } catch (_e) {
         // ignore
       }
       return next();
     },
-    responseMeta({ errors, data, type }) {
+    responseMeta({ errors, type }) {
       // Handle response metadata if needed
       const allOk = !errors.length;
       const isQuery = type === "query";

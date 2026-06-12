@@ -13,25 +13,20 @@ function generateSessionToken(username: string): string {
 }
 
 export const adminRouter = router({
-  login: publicProcedure.input(adminLoginSchema).mutation(async ({ input, ctx }) => {
+  login: publicProcedure.input(adminLoginSchema).mutation(async ({ input }) => {
     const { username, password } = input;
     if (username !== ADMIN_USER || password !== ADMIN_PASSWORD) throw new Error("Неверный логин или пароль");
 
     const sessionToken = generateSessionToken(username);
-    try {
-      ctx.res.setHeader("Set-Cookie", `admin-session=${encodeURIComponent(sessionToken)}; Path=/; HttpOnly; SameSite=Lax`);
-    } catch {}
+    return { success: true, token: sessionToken };
+  }),
+
+  logout: publicProcedure.mutation(async () => {
+
     return { success: true };
   }),
 
-  logout: publicProcedure.mutation(async ({ ctx }) => {
-    try {
-      ctx.res.setHeader("Set-Cookie", `admin-session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`);
-    } catch {}
-    return { success: true };
-  }),
-
-  deleteSubmission: adminProcedure.input(deleteSubmissionSchema).mutation(async ({ input, ctx }) => {
+  deleteSubmission: adminProcedure.input(deleteSubmissionSchema).mutation(async ({ input }) => {
     const { id } = input;
     try {
       await prisma.contactSubmission.delete({ where: { id } });
@@ -42,7 +37,7 @@ export const adminRouter = router({
     }
   }),
 
-  updateSubmissionStatus: adminProcedure.input(updateSubmissionStatusSchema).mutation(async ({ input, ctx }) => {
+  updateSubmissionStatus: adminProcedure.input(updateSubmissionStatusSchema).mutation(async ({ input }) => {
     const { id, status } = input;
     try {
       const updated = await prisma.contactSubmission.update({ where: { id }, data: { status } });

@@ -11,7 +11,7 @@ export function getTrpcClient() {
       httpBatchLink({
         url: "/api/trpc",
         transformer: superjson,
-        async fetch(input: RequestInfo, init?: RequestInit) {
+        async fetch(input: RequestInfo | URL, init?: RequestInit) {
           const response = await fetch(input, {
             ...init,
             credentials: "include",
@@ -20,6 +20,5 @@ export function getTrpcClient() {
         },
       }),
     ],
-    transformer: superjson,
   });
 }

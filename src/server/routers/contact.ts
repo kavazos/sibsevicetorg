@@ -1,40 +1,10 @@
 import { router, publicProcedure } from "../trpc";
 import prisma from "@/lib/prisma";
 import crypto from "crypto";
+import dns from "dns";
+import net from "net";
 import { contactSubmitSchema, contactConfirmSchema } from "../schemas";
 import { sendMail } from "@/lib/mail";
-
-// Use reliable public DNS for SMTP resolution when local resolver is unreliable.
-try {
-  dns.setServers(["8.8.8.8", "1.1.1.1"]);
-  console.log("Using custom DNS servers:", dns.getServers());
-} catch (dnsErr) {
-  console.error("Failed to set custom DNS servers:", dnsErr);
-}
-
-async function resolveHostAddress(host: string): Promise<string> {
-  try {
-    const addresses = await dns.promises.resolve4(host);
-    if (addresses && addresses.length > 0) {
-      console.log(`Resolved ${host} to ${addresses[0]} using public DNS`);
-      return addresses[0];
-    }
-  } catch (err) {
-    console.warn(`Failed to resolve IPv4 for ${host}:`, err);
-  }
-
-  try {
-    const addresses = await dns.promises.resolve6(host);
-    if (addresses && addresses.length > 0) {
-      console.log(`Resolved ${host} to ${addresses[0]} using public DNS (IPv6)`);
-      return addresses[0];
-    }
-  } catch (err) {
-    console.warn(`Failed to resolve IPv6 for ${host}:`, err);
-  }
-
-  throw new Error(`Unable to resolve host address for ${host}`);
-}
 
 async function smtpVerify(email: string): Promise<boolean> {
   try {
@@ -113,9 +83,6 @@ export const contactRouter = router({
         try {
           const exists = await smtpVerify(email);
           await prisma.contactSubmission.update({ where: { id: contact.id }, data: { isDeliverable: exists } });
-
-          const smtpHost = process.env.SMTP_HOST || "smtp.mail.ru";
-          const resolvedHost = await resolveHostAddress(smtpHost);
 
           const site = process.env.SITE_URL || `http://${ctx.req.headers.host || "localhost:3000"}`;
           const confirmUrl = `${site.replace(/\/$/, "")}/?confirmed_token=${token}`;

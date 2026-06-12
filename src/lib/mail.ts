@@ -37,9 +37,17 @@ export async function resolveHostAddress(host: string): Promise<string> {
 
 export async function createSmtpTransport() {
   const smtpHost = process.env.SMTP_HOST || DEFAULT_SMTP_HOST;
-  const resolvedHost = await resolveHostAddress(smtpHost);
+  let host = smtpHost;
+
+  try {
+    host = await resolveHostAddress(smtpHost);
+  } catch (err) {
+    console.warn(`DNS resolution failed for ${smtpHost}, falling back to hostname:`, err);
+    host = smtpHost;
+  }
+
   return nodemailer.createTransport({
-    host: resolvedHost,
+    host,
     port: Number(process.env.SMTP_PORT) || 587,
     secure: process.env.SMTP_SECURE === "true",
     auth: process.env.SMTP_USER

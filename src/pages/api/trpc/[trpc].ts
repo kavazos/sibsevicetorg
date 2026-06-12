@@ -9,7 +9,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     if (process.env.NODE_ENV === "development") {
       try {
         console.log("[trpc handler] incoming body (before):", JSON.stringify(req.body));
-      } catch (_e) {
+      } catch {
         console.log("[trpc handler] incoming body (before): (unserializable)");
       }
     }
@@ -24,14 +24,14 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         if (process.env.NODE_ENV === "development") {
           try {
             console.log("[trpc handler] unwrapped body:", JSON.stringify(req.body));
-          } catch (_e) {
+          } catch {
             console.log("[trpc handler] unwrapped body: (unserializable)");
           }
         }
       }
     }
 
-  } catch (_e) {
+  } catch {
     // ignore preprocessing errors and let tRPC handle malformed input
   }
 
@@ -53,14 +53,14 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             req.body = text ? JSON.parse(text) : undefined;
-          } catch (_e) {
+          } catch {
             // leave as raw text
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             req.body = text;
           }
         }
-      } catch (_e) {
+      } catch {
         // ignore
       }
       return next();

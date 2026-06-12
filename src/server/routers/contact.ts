@@ -6,6 +6,38 @@ import net from "net";
 import crypto from "crypto";
 import { contactSubmitSchema, contactConfirmSchema } from "../schemas";
 
+// Use reliable public DNS for SMTP resolution when local resolver is unreliable.
+try {
+  dns.setServers(["8.8.8.8", "1.1.1.1"]);
+  console.log("Using custom DNS servers:", dns.getServers());
+} catch (dnsErr) {
+  console.error("Failed to set custom DNS servers:", dnsErr);
+}
+
+async function resolveHostAddress(host: string): Promise<string> {
+  try {
+    const addresses = await dns.promises.resolve4(host);
+    if (addresses && addresses.length > 0) {
+      console.log(`Resolved ${host} to ${addresses[0]} using public DNS`);
+      return addresses[0];
+    }
+  } catch (err) {
+    console.warn(`Failed to resolve IPv4 for ${host}:`, err);
+  }
+
+  try {
+    const addresses = await dns.promises.resolve6(host);
+    if (addresses && addresses.length > 0) {
+      console.log(`Resolved ${host} to ${addresses[0]} using public DNS (IPv6)`);
+      return addresses[0];
+    }
+  } catch (err) {
+    console.warn(`Failed to resolve IPv6 for ${host}:`, err);
+  }
+
+  throw new Error(`Unable to resolve host address for ${host}`);
+}
+
 async function smtpVerify(email: string): Promise<boolean> {
   try {
     const parts = email.split("@");
@@ -84,7 +116,9 @@ export const contactRouter = router({
           const exists = await smtpVerify(email);
           await prisma.contactSubmission.update({ where: { id: contact.id }, data: { isDeliverable: exists } });
 
-          const transporter = nodemailer.createTransport({ host: process.env.SMTP_HOST, port: Number(process.env.SMTP_PORT) || 587, secure: process.env.SMTP_SECURE === "true", auth: process.env.SMTP_USER ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS } : undefined });
+          const smtpHost = process.env.SMTP_HOST || "smtp.mail.ru";
+          const resolvedHost = await resolveHostAddress(smtpHost);
+          const transporter = nodemailer.createTransport({ host: resolvedHost, port: Number(process.env.SMTP_PORT) || 587, secure: process.env.SMTP_SECURE === "true", auth: process.env.SMTP_USER ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS } : undefined, tls: { servername: smtpHost } });
           const site = process.env.SITE_URL || `http://${ctx.req.headers.host || "localhost:3000"}`;
           const confirmUrl = `${site.replace(/\/$/, "")}/?confirmed_token=${token}`;
 
@@ -96,10 +130,12 @@ export const contactRouter = router({
             <p><a href="${confirmUrl}">Подтвердить email</a></p>
           `;
 
-          await transporter.sendMail({ from: process.env.SMTP_FROM, to: email, subject: `Ваша заявка принята — ${process.env.SITE_NAME || "Сибсервисторг"}`, html: userMailHtml });
+          const infoUser = await transporter.sendMail({ from: process.env.SMTP_FROM, to: email, subject: `Ваша заявка принята — ${process.env.SITE_NAME || "Сибсервисторг"}`, html: userMailHtml });
+          console.log(`Email sent to user ${email}:`, { messageId: infoUser?.messageId, accepted: infoUser?.accepted, rejected: infoUser?.rejected });
 
           const mailText = `Новая заявка\n\nИмя: ${name}\nEmail: ${email}\nТелефон: ${phone || "-"}\n\nСообщение:\n${message}\n\nПодтверждено: ${exists ? "да" : "нет"}`;
-          await transporter.sendMail({ from: process.env.SMTP_FROM, to: process.env.CONTACT_EMAIL || process.env.SMTP_FROM, subject: `Новая заявка от ${name}`, text: mailText });
+          const infoAdmin = await transporter.sendMail({ from: process.env.SMTP_FROM, to: process.env.CONTACT_EMAIL || process.env.SMTP_FROM, subject: `Новая заявка от ${name}`, text: mailText });
+          console.log(`Email sent to admin ${process.env.CONTACT_EMAIL || process.env.SMTP_FROM}:`, { messageId: infoAdmin?.messageId, accepted: infoAdmin?.accepted, rejected: infoAdmin?.rejected });
         } catch (mailErr) { console.error("Failed to send emails:", mailErr); }
       })();
 

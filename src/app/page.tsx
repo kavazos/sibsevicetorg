@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import Navbar from "@/components/ui/Navbar";
 import Footer from "@/components/ui/Footer";
 import HeroSection from "@/components/sections/HeroSection";
@@ -9,7 +10,11 @@ import ReviewsSection from "@/components/sections/ReviewsSection";
 import ContactSection from "@/components/sections/ContactSection";
 import MapSection from "@/components/sections/MapSection";
 import ScrollReveal from "@/components/ui/ScrollReveal";
-import ConfirmationHandler from "@/components/sections/ConfirmationHandler";
+
+const ConfirmationHandler = dynamic(
+  () => import("@/components/sections/ConfirmationHandler"),
+  { ssr: false }
+);
 
 export default function Home() {
   return (

@@ -2,6 +2,7 @@ import { router, publicProcedure, adminProcedure } from "../trpc";
 import { createHash } from "crypto";
 import prisma from "@/lib/prisma";
 import { adminLoginSchema, deleteSubmissionSchema, updateSubmissionStatusSchema } from "../schemas";
+import { cookieHeaderOptions } from "@/lib/auth";
 
 const ADMIN_USER = process.env.ADMIN_USER || "admin";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "password";
@@ -13,16 +14,17 @@ function generateSessionToken(username: string): string {
 }
 
 export const adminRouter = router({
-  login: publicProcedure.input(adminLoginSchema).mutation(async ({ input }) => {
+  login: publicProcedure.input(adminLoginSchema).mutation(async ({ input, ctx }) => {
     const { username, password } = input;
     if (username !== ADMIN_USER || password !== ADMIN_PASSWORD) throw new Error("Неверный логин или пароль");
 
     const sessionToken = generateSessionToken(username);
+    ctx.res.setHeader("Set-Cookie", `admin-session=${encodeURIComponent(sessionToken)}; ${cookieHeaderOptions()}`);
     return { success: true, token: sessionToken };
   }),
 
-  logout: publicProcedure.mutation(async () => {
-
+  logout: publicProcedure.mutation(async ({ ctx }) => {
+    ctx.res.setHeader("Set-Cookie", `admin-session=; ${cookieHeaderOptions(0)}`);
     return { success: true };
   }),
 

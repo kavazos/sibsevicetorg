@@ -2,6 +2,7 @@ import { router, publicProcedure } from "../trpc";
 import prisma from "@/lib/prisma";
 import { comparePassword, createSessionToken, cookieHeaderOptions, hashPassword, verifySessionToken } from "@/lib/auth";
 import { loginSchema, registerSchema, updateProfileSchema, changePasswordSchema } from "../schemas";
+import { sendMail } from "@/lib/mail";
 
 export const authRouter = router({
   login: publicProcedure.input(loginSchema).mutation(async ({ input, ctx }) => {
@@ -34,6 +35,25 @@ export const authRouter = router({
     try {
       ctx.res.setHeader("Set-Cookie", `user-session=${encodeURIComponent(token)}; ${cookieHeaderOptions()}`);
     } catch {}
+
+    void (async () => {
+      try {
+        const welcomeHtml = `
+          <p>Здравствуйте, ${user.name || user.email}!</p>
+          <p>Спасибо за регистрацию на сайте ${process.env.SITE_NAME || "Сибсервисторг"}.</p>
+          <p>Теперь вы можете авторизоваться и просматривать статус своих заявок.</p>
+        `;
+        const info = await sendMail({
+          from: process.env.SMTP_FROM,
+          to: user.email,
+          subject: `Добро пожаловать на ${process.env.SITE_NAME || "Сибсервисторг"}`,
+          html: welcomeHtml,
+        });
+        console.log(`Welcome email sent to ${user.email}:`, { messageId: info?.messageId, accepted: info?.accepted, rejected: info?.rejected });
+      } catch (mailErr) {
+        console.error("Failed to send welcome email:", mailErr);
+      }
+    })();
 
     return { success: true, id: user.id };
   }),

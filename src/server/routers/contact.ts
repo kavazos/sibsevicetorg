@@ -1,10 +1,8 @@
 import { router, publicProcedure } from "../trpc";
 import prisma from "@/lib/prisma";
-import nodemailer from "nodemailer";
-import dns from "dns";
-import net from "net";
 import crypto from "crypto";
 import { contactSubmitSchema, contactConfirmSchema } from "../schemas";
+import { sendMail } from "@/lib/mail";
 
 // Use reliable public DNS for SMTP resolution when local resolver is unreliable.
 try {
@@ -118,7 +116,7 @@ export const contactRouter = router({
 
           const smtpHost = process.env.SMTP_HOST || "smtp.mail.ru";
           const resolvedHost = await resolveHostAddress(smtpHost);
-          const transporter = nodemailer.createTransport({ host: resolvedHost, port: Number(process.env.SMTP_PORT) || 587, secure: process.env.SMTP_SECURE === "true", auth: process.env.SMTP_USER ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS } : undefined, tls: { servername: smtpHost } });
+
           const site = process.env.SITE_URL || `http://${ctx.req.headers.host || "localhost:3000"}`;
           const confirmUrl = `${site.replace(/\/$/, "")}/?confirmed_token=${token}`;
 
@@ -130,11 +128,11 @@ export const contactRouter = router({
             <p><a href="${confirmUrl}">Подтвердить email</a></p>
           `;
 
-          const infoUser = await transporter.sendMail({ from: process.env.SMTP_FROM, to: email, subject: `Ваша заявка принята — ${process.env.SITE_NAME || "Сибсервисторг"}`, html: userMailHtml });
+          const infoUser = await sendMail({ from: process.env.SMTP_FROM, to: email, subject: `Ваша заявка принята — ${process.env.SITE_NAME || "Сибсервисторг"}`, html: userMailHtml });
           console.log(`Email sent to user ${email}:`, { messageId: infoUser?.messageId, accepted: infoUser?.accepted, rejected: infoUser?.rejected });
 
           const mailText = `Новая заявка\n\nИмя: ${name}\nEmail: ${email}\nТелефон: ${phone || "-"}\n\nСообщение:\n${message}\n\nПодтверждено: ${exists ? "да" : "нет"}`;
-          const infoAdmin = await transporter.sendMail({ from: process.env.SMTP_FROM, to: process.env.CONTACT_EMAIL || process.env.SMTP_FROM, subject: `Новая заявка от ${name}`, text: mailText });
+          const infoAdmin = await sendMail({ from: process.env.SMTP_FROM, to: process.env.CONTACT_EMAIL || process.env.SMTP_FROM, subject: `Новая заявка от ${name}`, text: mailText });
           console.log(`Email sent to admin ${process.env.CONTACT_EMAIL || process.env.SMTP_FROM}:`, { messageId: infoAdmin?.messageId, accepted: infoAdmin?.accepted, rejected: infoAdmin?.rejected });
         } catch (mailErr) { console.error("Failed to send emails:", mailErr); }
       })();

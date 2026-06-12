@@ -12,9 +12,9 @@ async function smtpVerify(email: string): Promise<boolean> {
     if (parts.length !== 2) return false;
     const domain = parts[1];
 
-    const mx = await dns.promises.resolveMx(domain as string);
+    const mx = await dns.promises.resolveMx(domain);
     if (!mx || mx.length === 0) return false;
-    mx.sort((a: any, b: any) => a.priority - b.priority);
+    mx.sort((a, b) => a.priority - b.priority);
 
     const mxHost = mx[0].exchange;
 

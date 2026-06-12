@@ -19,8 +19,9 @@ export default function RegisterPage() {
     try {
       await mutation.mutateAsync({ email, password, name });
       router.push("/account");
-    } catch (err: any) {
-      setError(err.message || "Ошибка регистрации");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message || "Ошибка регистрации");
     }
   };
 

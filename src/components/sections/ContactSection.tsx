@@ -47,14 +47,15 @@ export default function ContactSection() {
     setError(null);
     setLoading(true);
     try {
-      const data = await submitMutation.mutateAsync(form);
+      await submitMutation.mutateAsync(form);
       setSent(true);
       setForm({ name: "", company: "", phone: "", email: "", service: "", message: "" });
       setToast({ message: "Ваша заявка успешно отправлена!", type: "success" });
       setTimeout(() => setSent(false), 5000);
-    } catch (err: any) {
-      setError(err.message || "Не удалось отправить заявку. Попробуйте позже.");
-      setToast({ message: err.message || "Не удалось отправить заявку. Попробуйте позже.", type: "error" });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message || "Не удалось отправить заявку. Попробуйте позже.");
+      setToast({ message: message || "Не удалось отправить заявку. Попробуйте позже.", type: "error" });
     } finally {
       setLoading(false);
     }

@@ -8,18 +8,17 @@ export const trpc = createTRPCReact<AppRouter>();
 export function getTrpcClient() {
   return trpc.createClient({
     links: [
-      // cast to any to avoid mismatched transformer typing between @trpc versions
-      httpBatchLink(({
+      httpBatchLink({
         url: "/api/trpc",
         transformer: superjson,
-        async fetch(input, init) {
+        async fetch(input: RequestInfo, init?: RequestInit) {
           const response = await fetch(input, {
             ...init,
             credentials: "include",
           });
           return response;
         },
-      } as any)),
+      }),
     ],
     transformer: superjson,
   });

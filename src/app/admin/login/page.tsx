@@ -20,8 +20,9 @@ export default function AdminLoginPage() {
     try {
       await mutation.mutateAsync({ username, password });
       router.push("/admin");
-    } catch (err: any) {
-      setError(err.message || "Неверный логин или пароль");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message || "Неверный логин или пароль");
     } finally {
       setIsLoading(false);
     }

@@ -17,8 +17,9 @@ export default function ProfileForm({ user }: { user: { id: string; name?: strin
     try {
       await updateMutation.mutateAsync({ name });
       setMsg('Сохранено');
-    } catch (err: any) {
-      setMsg(err.message || 'Ошибка');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      setMsg(message || 'Ошибка');
     } finally {
       setSaving(false);
     }
@@ -39,8 +40,9 @@ export default function ProfileForm({ user }: { user: { id: string; name?: strin
       setPwMsg('Пароль изменён');
       setCurrentPassword('');
       setNewPassword('');
-    } catch (err: any) {
-      setPwMsg(err.message || 'Ошибка');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      setPwMsg(message || 'Ошибка');
     } finally {
       setChanging(false);
     }

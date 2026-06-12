@@ -18,8 +18,9 @@ export default function LoginPage() {
     try {
       await mutation.mutateAsync({ email, password });
       router.push("/account");
-    } catch (err: any) {
-      setError(err.message || "Ошибка входа");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message || "Ошибка входа");
     }
   };
 

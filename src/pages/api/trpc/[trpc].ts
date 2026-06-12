@@ -44,7 +44,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       try {
         if (req.method !== "GET" && !Object.prototype.hasOwnProperty.call(req, "body")) {
           const chunks: Buffer[] = [];
-          for await (const chunk of req as any) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+          const stream = req as unknown as AsyncIterable<Buffer | string>;
+          for await (const chunk of stream) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
           const buf = Buffer.concat(chunks);
           const text = buf.toString();
           if (process.env.NODE_ENV === "development") console.log("[trpc middleware] raw body:", text);
@@ -65,7 +66,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       }
       return next();
     },
-    responseMeta({ errors, data, ctx, paths, type }) {
+    responseMeta({ errors, data, type }) {
       // Handle response metadata if needed
       const allOk = !errors.length;
       const isQuery = type === "query";

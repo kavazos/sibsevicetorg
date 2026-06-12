@@ -9,8 +9,7 @@ const SESSION_SECRET = process.env.SESSION_SECRET || "your-secret-key-change-in-
 
 function generateSessionToken(username: string): string {
   const timestamp = Date.now();
-  const data = `${username}-${timestamp}-${SESSION_SECRET}`;
-  return createHash("sha256").update(data).digest("hex");
+  return createHash("sha256").update(`${username}-${timestamp}-${SESSION_SECRET}`).digest("hex");
 }
 
 export const adminRouter = router({

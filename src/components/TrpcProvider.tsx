@@ -6,7 +6,7 @@ import { trpc, getTrpcClient } from "@/lib/trpc";
 
 export default function TrpcProvider({ children }: { children: React.ReactNode }) {
   const queryClientRef = useRef<QueryClient>();
-  const trpcClientRef = useRef<any>();
+  const trpcClientRef = useRef<ReturnType<typeof getTrpcClient>>();
 
   if (!queryClientRef.current) queryClientRef.current = new QueryClient();
   if (!trpcClientRef.current) trpcClientRef.current = getTrpcClient();

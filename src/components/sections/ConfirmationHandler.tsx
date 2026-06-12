@@ -6,7 +6,7 @@ import { trpc } from "@/lib/trpc";
 
 export default function ConfirmationHandler() {
   const searchParams = useSearchParams();
-  const confirmedToken = searchParams.get("confirmed_token");
+  const confirmedToken = searchParams?.get("confirmed_token") ?? null;
   const confirmMutation = trpc.contact.confirm.useMutation();
   const [isProcessing, setIsProcessing] = useState(false);
 

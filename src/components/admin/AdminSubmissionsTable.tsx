@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { ContactSubmission, SubmissionStatus } from "@prisma/client";
+import { trpc } from "@/lib/trpc";
 
 interface AdminSubmissionsTableProps {
   submissions: ContactSubmission[];
@@ -124,6 +125,9 @@ export default function AdminSubmissionsTable({ submissions }: AdminSubmissionsT
     return { total, weekCount, monthCount, statusCounts };
   }, [items]);
 
+  const deleteMutation = trpc.admin.deleteSubmission.useMutation();
+  const updateStatusMutation = trpc.admin.updateSubmissionStatus.useMutation();
+
   const handleDelete = async (id: string) => {
     if (!confirm("Удалить эту заявку?")) return;
 
@@ -131,16 +135,7 @@ export default function AdminSubmissionsTable({ submissions }: AdminSubmissionsT
     setStatusMessage(null);
 
     try {
-      const response = await fetch(`/api/admin/submissions/${id}`, {
-        method: "DELETE",
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        setStatusMessage(data.error || "Не удалось удалить заявку.");
-        return;
-      }
-
+      await deleteMutation.mutateAsync({ id });
       setItems((current) => current.filter((item) => item.id !== id));
       setStatusMessage("Заявка успешно удалена.");
     } catch {
@@ -155,27 +150,14 @@ export default function AdminSubmissionsTable({ submissions }: AdminSubmissionsT
     setStatusMessage(null);
 
     try {
-      const response = await fetch(`/api/admin/submissions/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        setStatusMessage(data.error || "Не удалось обновить статус.");
-        console.error("Update status error:", response.status, data);
-        return;
-      }
-
-      await response.json();
+      await updateStatusMutation.mutateAsync({ id, status });
 
       setItems((current) =>
         current.map((item) => (item.id === id ? { ...item, status } : item))
       );
       setStatusMessage(`Статус заявки обновлён на «${statusLabels[status]}».`);
     } catch (error) {
-      console.error("Status update fetch error:", error);
+      console.error("Status update error:", error);
       setStatusMessage("Ошибка сервера. Повторите позже.");
     } finally {
       setLoadingId(null);

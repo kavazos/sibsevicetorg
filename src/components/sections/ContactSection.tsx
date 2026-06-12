@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import Toast from "@/components/ui/Toast";
+import { trpc } from "@/lib/trpc";
 
 export default function ContactSection() {
   const [form, setForm] = useState({
@@ -40,32 +41,20 @@ export default function ContactSection() {
     return formatted;
   };
 
+  const submitMutation = trpc.contact.submit.useMutation();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
-
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error || "Не удалось отправить заявку. Попробуйте позже.");
-        return;
-      }
-
+      const data = await submitMutation.mutateAsync(form);
       setSent(true);
       setForm({ name: "", company: "", phone: "", email: "", service: "", message: "" });
       setToast({ message: "Ваша заявка успешно отправлена!", type: "success" });
       setTimeout(() => setSent(false), 5000);
-    } catch {
-      setError("Ошибка сети. Проверьте подключение и повторите попытку.");
-      setToast({ message: "Не удалось отправить заявку. Попробуйте позже.", type: "error" });
+    } catch (err: any) {
+      setError(err.message || "Не удалось отправить заявку. Попробуйте позже.");
+      setToast({ message: err.message || "Не удалось отправить заявку. Попробуйте позже.", type: "error" });
     } finally {
       setLoading(false);
     }

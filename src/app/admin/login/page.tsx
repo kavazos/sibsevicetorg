@@ -3,6 +3,7 @@
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { trpc } from "@/lib/trpc";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -11,30 +12,16 @@ export default function AdminLoginPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const mutation = trpc.admin.login.useMutation();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-
     try {
-      const response = await fetch("/api/admin/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error || "Неверный логин или пароль");
-        return;
-      }
-
-      // Успешный вход
+      await mutation.mutateAsync({ username, password });
       router.push("/admin");
-    } catch (err) {
-      setError("Ошибка при попытке входа. Попробуйте позже.");
-      console.error(err);
+    } catch (err: any) {
+      setError(err.message || "Неверный логин или пароль");
     } finally {
       setIsLoading(false);
     }

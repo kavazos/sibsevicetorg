@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import BackToTop from "@/components/ui/BackToTop";
+import TrpcProvider from "@/components/TrpcProvider";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://sibservistorg.ru"),
@@ -40,7 +41,9 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className="bg-cream text-ink antialiased">
-        {children}
+        <TrpcProvider>
+          {children}
+        </TrpcProvider>
         {/* JSON-LD схема компании для поисковых систем */}
         <script
           type="application/ld+json"

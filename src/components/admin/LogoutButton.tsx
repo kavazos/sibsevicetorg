@@ -3,11 +3,13 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { LogOut } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 export function LogoutButton() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const logoutMutation = trpc.admin.logout.useMutation();
 
   useEffect(() => {
     setMounted(true);
@@ -16,7 +18,7 @@ export function LogoutButton() {
   const handleLogout = async () => {
     setIsLoading(true);
     try {
-      await fetch("/api/admin/logout", { method: "POST" });
+      await logoutMutation.mutateAsync();
       router.push("/admin/login");
     } catch (error) {
       console.error("Logout error:", error);

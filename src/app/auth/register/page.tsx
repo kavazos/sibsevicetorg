@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { trpc } from "@/lib/trpc";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -11,23 +12,16 @@ export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
+  const mutation = trpc.auth.register.useMutation();
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, name }),
-    });
-
-    const data = await res.json();
-    if (!res.ok) {
-      setError(data.error || "Ошибка регистрации");
-      return;
+    try {
+      await mutation.mutateAsync({ email, password, name });
+      router.push("/account");
+    } catch (err: any) {
+      setError(err.message || "Ошибка регистрации");
     }
-
-    router.push("/account");
   };
 
   return (

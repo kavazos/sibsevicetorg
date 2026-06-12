@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { trpc } from "@/lib/trpc";
 
 const navLinks = [
   { href: "#services", label: "Услуги" },
@@ -21,27 +22,13 @@ export default function Navbar() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [menuWidth, setMenuWidth] = useState<number | null>(null);
   const [activeSection, setActiveSection] = useState<string>("services");
-  const [user, setUser] = useState<{ name?: string; email: string } | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch("/api/auth/me");
-        const data = await res.json();
-        setUser(data.user);
-      } catch {
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUser();
-  }, []);
+  const { data: meData, isLoading } = trpc.auth.me.useQuery(undefined, { retry: false });
+  const logoutMutation = trpc.auth.logout.useMutation();
+  const user = meData?.user || null;
+  const loading = isLoading;
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    setUser(null);
+    await logoutMutation.mutateAsync();
     router.push("/");
   };
 

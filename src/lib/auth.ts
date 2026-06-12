@@ -35,6 +35,16 @@ export function verifySessionToken(token: string | null | undefined) {
   }
 }
 
+export function getCookieOptions(maxAgeSeconds = 60 * 60 * 24 * 7) {
+  return {
+    httpOnly: true,
+    path: "/",
+    maxAge: maxAgeSeconds,
+    sameSite: "lax" as const,
+    secure: process.env.NODE_ENV === "production",
+  };
+}
+
 export function cookieHeaderOptions(maxAgeSeconds = 60 * 60 * 24 * 7) {
   return `HttpOnly; Path=/; Max-Age=${maxAgeSeconds}; SameSite=Lax`;
 }

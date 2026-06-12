@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { trpc } from "@/lib/trpc";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -10,23 +11,16 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
+  const mutation = trpc.auth.login.useMutation();
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const data = await res.json();
-    if (!res.ok) {
-      setError(data.error || "Ошибка входа");
-      return;
+    try {
+      await mutation.mutateAsync({ email, password });
+      router.push("/account");
+    } catch (err: any) {
+      setError(err.message || "Ошибка входа");
     }
-
-    router.push("/account");
   };
 
   return (

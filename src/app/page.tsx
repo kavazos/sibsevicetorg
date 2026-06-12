@@ -9,10 +9,12 @@ import ReviewsSection from "@/components/sections/ReviewsSection";
 import ContactSection from "@/components/sections/ContactSection";
 import MapSection from "@/components/sections/MapSection";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import ConfirmationHandler from "@/components/sections/ConfirmationHandler";
 
 export default function Home() {
   return (
     <>
+      <ConfirmationHandler />
       <Navbar />
       <main>
         <ScrollReveal>

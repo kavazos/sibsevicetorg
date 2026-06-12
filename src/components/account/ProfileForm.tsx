@@ -2,23 +2,26 @@
 
 import { useState, FormEvent } from "react";
 
+import { trpc } from "@/lib/trpc";
+
 export default function ProfileForm({ user }: { user: { id: string; name?: string; email: string } }) {
   const [name, setName] = useState(user.name || "");
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
+  const updateMutation = trpc.auth.update.useMutation();
   const save = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSaving(true);
     setMsg(null);
-    const res = await fetch('/api/auth/update', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name }) });
-    const data = await res.json();
-    setSaving(false);
-    if (!res.ok) {
-      setMsg(data.error || 'Ошибка');
-      return;
+    try {
+      await updateMutation.mutateAsync({ name });
+      setMsg('Сохранено');
+    } catch (err: any) {
+      setMsg(err.message || 'Ошибка');
+    } finally {
+      setSaving(false);
     }
-    setMsg('Сохранено');
   }
 
   const [currentPassword, setCurrentPassword] = useState("");
@@ -26,20 +29,21 @@ export default function ProfileForm({ user }: { user: { id: string; name?: strin
   const [pwMsg, setPwMsg] = useState<string | null>(null);
   const [changing, setChanging] = useState(false);
 
+  const changePasswordMutation = trpc.auth.changePassword.useMutation();
   const changePassword = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setChanging(true);
     setPwMsg(null);
-    const res = await fetch('/api/auth/change-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ currentPassword, newPassword }) });
-    const data = await res.json();
-    setChanging(false);
-    if (!res.ok) {
-      setPwMsg(data.error || 'Ошибка');
-      return;
+    try {
+      await changePasswordMutation.mutateAsync({ currentPassword, newPassword });
+      setPwMsg('Пароль изменён');
+      setCurrentPassword('');
+      setNewPassword('');
+    } catch (err: any) {
+      setPwMsg(err.message || 'Ошибка');
+    } finally {
+      setChanging(false);
     }
-    setPwMsg('Пароль изменён');
-    setCurrentPassword('');
-    setNewPassword('');
   }
 
   return (
